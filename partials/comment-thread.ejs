@@ -1,0 +1,33 @@
+<% function renderComments(comments) { %>
+    <% comments.forEach(comment => { %>
+      <div class="comment card mb-3">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h6 class="card-subtitle mb-2 text-muted">
+              <%= comment.user.username || 'Anonymous' %>
+            </h6>
+            <small class="text-muted">
+              <%= new Date(comment.createdAt).toLocaleDateString('th-TH') %>
+            </small>
+          </div>
+          <p class="card-text"><%= comment.content %></p>
+  
+          <!-- Reply Button -->
+          <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="<%= comment._id %>">Reply</button>
+          <div class="reply-form-container d-none mt-2" id="replyForm<%= comment._id %>">
+            <form class="reply-form" data-comment-id="<%= comment._id %>" data-post-id="<%= post._id %>">
+              <textarea class="form-control" rows="2" placeholder="Write your reply..."></textarea>
+              <button type="submit" class="btn btn-sm btn-primary mt-2">Submit Reply</button>
+            </form>
+          </div>
+  
+          <!-- Render Nested Replies -->
+          <% if (comment.replies && comment.replies.length > 0) { %>
+            <div class="replies ms-4 mt-3">
+              <%- renderComments(comment.replies) %> <!-- Recursive call for nested replies -->
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% }); %>
+  <% } %>

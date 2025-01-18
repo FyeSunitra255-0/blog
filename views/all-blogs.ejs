@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tonewoo - Blog</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="/">Tonewoo</a>
+            </div>
+            <ul class="nav-links">
+                <li class="dropdown">
+                    <a href="#">หมวดหมู่ <span class="arrow-down">▼</span></a>
+                    <!-- Dropdown for Categories -->
+                    <ul class="dropdown-menu">
+                        <% categories.forEach(category=> { %>
+                            <li>
+                                <a href="/blogs?category=<%= category._id %>"
+                                    class="<%= category._id == selectedCategory ? 'active' : '' %>">
+                                    <%= category.name %>
+                                </a>
+                            </li>
+                            <% }) %>
+                    </ul>
+                </li>
+
+                <!-- เมื่อเข้าสู่ระบบแล้วจะแสดง Username และปุ่มออกจากระบบ -->
+                <li id="nav-thread" style="display: none;"><a href="#" data-bs-toggle="modal"
+                        data-bs-target="#createPostModal">ตั้งกระทู้</a></li>
+                <li id="user-info">
+                    <% if (user) { %>
+                        <a href="/user/profile">
+                            <%= user.username %>
+                        </a>
+                        <% } else { %>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"></a>
+                            <% } %>
+                </li>
+                <li id="nav-login"><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">เข้าสู่ระบบ</a></li>
+                <li id="nav-register"><a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">สมัครสมาชิก</a>
+                </li>
+                <li id="nav-logout" style="display: none;"><a href="#" onclick="logout()">ออกจากระบบ</a></li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <!-- Modal สำหรับเข้าสู่ระบบ -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">เข้าสู่ระบบ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">อีเมล</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">รหัสผ่าน</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับสมัครสมาชิก -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">สมัครสมาชิก</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">ชื่อผู้ใช้</label>
+                            <input type="text" class="form-control" id="registerUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">อีเมล</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">รหัสผ่าน</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">ยืนยันรหัสผ่าน</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">สมัครสมาชิก</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับตั้งกระทู้ -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPostModalLabel">ตั้งกระทู้</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createPostForm">
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">หัวข้อกระทู้</label>
+                            <input type="text" class="form-control" id="postTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">เนื้อหากระทู้</label>
+                            <textarea class="form-control" id="postContent" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postImages" class="form-label">อัปโหลดภาพ (ถ้ามี)</label>
+                            <input type="file" class="form-control" id="postImages" multiple>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postCategories" class="form-label">หมวดหมู่</label>
+                            <div id="postCategories">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">สร้างกระทู้</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="hero">
+            <h1>ยินดีต้อนรับสู่ Tonewoo</h1>
+            <p>แชร์เรื่องราว ความรู้ และประสบการณ์ของคุณ</p>
+        </div>
+
+        <!-- Popular Blogs Section -->
+        <section class="my-5">
+            <div class="row">
+                <% popularBlogs.forEach(blog=> { %>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm hover-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div class="category-tags mb-2">
+                                        <% blog.categories.forEach(category=> { %>
+                                            <span class="badge bg-light text-dark me-1">
+                                                <%= category.name %>
+                                            </span>
+                                            <% }); %>
+                                    </div>
+                                    <small class="text-muted">
+                                        <%= new Date(blog.createdAt).toLocaleDateString('th-TH', { year: 'numeric' ,
+                                            month: 'short' , day: 'numeric' }) %>
+                                    </small>
+                                </div>
+
+                                <h5 class="card-title mb-3">
+                                    <a href="/post/<%= blog._id %>"
+                                        class="text-decoration-none text-dark stretched-link">
+                                        <%= blog.title %>
+                                    </a>
+                                </h5>
+
+                                <div class="card-text mb-3">
+                                    <% if (blog.content) { %>
+                                        <%= blog.content.substring(0, 150) %>...
+                                            <% } %>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-end">
+                                    <div class="d-flex align-items-center">
+                                        <% if (blog.user.avatar) { %>
+                                            <img src="<%= blog.user.avatar %>" class="rounded-circle me-2" width="24"
+                                                height="24" alt="Avatar">
+                                            <% } else { %>
+                                                <div class="rounded-circle bg-secondary text-white me-2 d-flex align-items-center justify-content-center"
+                                                    style="width: 24px; height: 24px;">
+                                                    <%= blog.user.username.charAt(0).toUpperCase() %>
+                                                </div>
+                                                <% } %>
+                                                    <span class="text-muted">โดย <strong>
+                                                            <%= blog.user.username %>
+                                                        </strong></span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <small class="text-muted me-3">
+                                            <i class="bi bi-chat"></i>
+                                            <%= blog.comments?.length || 0 %>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            if (result.token) {
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("user", JSON.stringify(result.user));
+
+                // เพิ่มบรรทัดนี้เพื่อตรวจสอบ
+                console.log("Stored token:", localStorage.getItem("token"));
+
+                alert("เข้าสู่ระบบสำเร็จ!");
+                location.reload();
+            } else {
+                alert(result.error);
+            }
+        });
+
+        document.getElementById("registerForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const username = document.getElementById("registerUsername").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword = document.getElementById("registerConfirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alert("รหัสผ่านไม่ตรงกัน!");
+                return;
+            }
+
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const result = await response.json();
+            alert("สมัครสมาชิกสำเร็จ");
+            location.reload();
+            if (result.success) location.reload();
+        });
+
+        // ตรวจสอบว่า User Login หรือไม่
+        document.addEventListener("DOMContentLoaded", function () {
+            checkLogin();
+
+            if (window.location.pathname === "/user/profile") {
+                console.log("On profile page - fetching profile");
+                fetchProfile();
+            }
+        });
+
+        function checkLogin() {
+            const token = localStorage.getItem("token");
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            if (token && user) {
+                // ซ่อนปุ่มเข้าสู่ระบบและสมัครสมาชิก
+                document.getElementById("nav-login").style.display = "none";
+                document.getElementById("nav-register").style.display = "none";
+
+                // แสดงปุ่มตั้งกระทู้และออกจากระบบ
+                document.getElementById("nav-thread").style.display = "inline-block";
+                document.getElementById("nav-logout").style.display = "inline-block";
+
+                document.getElementById("user-info").innerHTML = `<a href="/user/profile">${user.username}</a>`;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            location.reload();
+        }
+
+        // ดึงข้อมูลหมวดหมู่จากเซิร์ฟเวอร์
+        async function loadCategories() {
+            const response = await fetch("/api/categories");
+            const categories = await response.json();
+            const categoriesContainer = document.getElementById("postCategories");
+
+            categories.forEach(category => {
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = `category_${category._id}`;
+                checkbox.value = category._id;
+                const label = document.createElement("label");
+                label.setAttribute("for", checkbox.id);
+                label.textContent = category.name;
+
+                const div = document.createElement("div");
+                div.classList.add("form-check");
+                div.appendChild(checkbox);
+                div.appendChild(label);
+
+                categoriesContainer.appendChild(div);
+            });
+        }
+
+        // ส่งข้อมูลการตั้งกระทู้ไปยังเซิร์ฟเวอร์
+        document.getElementById("createPostForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("title", document.getElementById("postTitle").value);
+            formData.append("content", document.getElementById("postContent").value);
+
+            // แก้ไขการจัดการ categories
+            const selectedCategories = Array.from(document.querySelectorAll("#postCategories input:checked"))
+                .map(input => input.value);
+            // ส่ง categories เป็น JSON string
+            formData.append("categories", JSON.stringify(selectedCategories));
+
+            // แก้ไขการจัดการ files
+            const imageFiles = document.getElementById("postImages").files;
+            for (let i = 0; i < imageFiles.length; i++) {
+                formData.append("images", imageFiles[i]);
+            }
+
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch("/api/posts", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("สร้างกระทู้สำเร็จ!");
+                    location.reload();
+                } else {
+                    alert("เกิดข้อผิดพลาด: " + (result.error || "ไม่สามารถสร้างกระทู้ได้"));
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", loadCategories);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,227 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+  background: #333;
+  color: #fff;
+  padding: 0.8em 1.5em;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar .logo a {
+  color: #fff;
+  font-size: 1.5em;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar .nav-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar .nav-links li {
+  margin-left: 1.5em;
+  position: relative;
+}
+
+.navbar .nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.navbar .nav-links .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #444;
+  padding: 0.5em 0;
+  list-style: none;
+}
+
+.navbar .nav-links .dropdown-menu li {
+  margin: 0;
+}
+
+.navbar .nav-links .dropdown-menu a {
+  padding: 0.5em 1em;
+  display: block;
+}
+
+.navbar .nav-links .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.arrow-down {
+  font-size: 0.8em;
+  margin-left: 0.2em;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: #fff;
+  text-align: center;
+  padding: 5em 1em;
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin: 0 0 0.5em;
+}
+
+.hero p {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+section {
+  padding: 20px;
+}
+
+/* Footer */
+.footer {
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1em 0;
+  margin-top: 2em;
+}
+
+
+.post-content {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.post-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+}
+
+.post-metadata {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.post-images {
+  margin: 15px 0;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.comment-section {
+  margin-top: 30px;
+}
+
+.comment {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.comment-metadata {
+  font-size: 0.85em;
+  color: #666;
+}
+
+.reply {
+  margin-left: 40px;
+  border-left: 2px solid #dee2e6;
+  padding-left: 15px;
+}
+
+.category-tag {
+  display: inline-block;
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.btn-reply {
+  font-size: 0.85em;
+  padding: 2px 8px;
+}
+
+.comment-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.comments-section {
+  margin-top: 2rem;
+}
+
+.comment {
+  border-left: 3px solid #007bff;
+  margin-bottom: 1rem;
+}
+
+.replies {
+  margin-left: 20px;
+  border-left: 1px solid #ddd;
+  padding-left: 15px;
+}
+
+
+.reply {
+  background-color: #f8f9fa;
+}
+
+.reply-form-container {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.comment {
+  margin-bottom: 20px;
+}
+
+.reply {
+  margin-left: 20px; /* ให้คำตอบมีการเยื้องจากคอมเมนต์หลัก */
+}
+
+button {
+  margin-top: 5px;
+}
